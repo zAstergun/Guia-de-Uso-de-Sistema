@@ -1,47 +1,36 @@
 // script.js
 document.addEventListener("DOMContentLoaded", () => {
-  // Seleciona todos os elementos no <main> que têm um ID e podem ser alvos de navegação
+  // ==========================================
+  // 1. LÓGICA DE NAVEGAÇÃO E SCROLLSPY
+  // ==========================================
   const allNavTargets = document.querySelectorAll(
     "main section[id], main article[id]"
   );
-  // Seleciona todos os links <a> dentro da navegação do <aside>
   const asideNavLinks = document.querySelectorAll("aside nav a");
-
-  // Armazena os elementos observados que estão atualmente intersectando (visíveis)
-  // A chave é o ID do elemento, o valor é o objeto 'entry' do IntersectionObserver
   const visibleElements = new Map();
 
   const observerOptions = {
-    root: null, // Define a viewport como a raiz de observação
-    rootMargin: "0px", // Nenhuma margem adicional, observa a viewport real
-    threshold: [0, 0.2, 0.8, 1.0], // Dispara o callback quando 0%, 20%, 80% ou 100% do elemento está visível.
-    // O threshold 0 é crucial para saber quando um elemento sai completamente da tela.
-    // Ter múltiplos thresholds ajuda a refinar qual elemento está "mais" visível.
-    // Você pode experimentar com valores menores como [0, 0.1] se a detecção não estiver sensível o suficiente.
+    root: null,
+    rootMargin: "0px",
+    threshold: [0, 0.2, 0.8, 1.0],
   };
 
-  // Função para ativar o link correto no menu lateral
   const activateLinkForId = (idToActivate) => {
-    // Remove a classe 'active' de todos os links do menu lateral
     asideNavLinks.forEach((link) => {
       link.classList.remove("active");
     });
 
     if (idToActivate) {
-      // Encontra o link no 'aside' que corresponde ao ID do elemento visível
       const targetLink = document.querySelector(
         `aside nav a[href="#${idToActivate}"]`
       );
       if (targetLink) {
-        // Adiciona a classe 'active' ao link do elemento visível (seja ele principal ou subtópico)
         targetLink.classList.add("active");
 
-        // Se o link ativo for um sub-link (identificado pela sua estrutura HTML no 'aside')
-        // também ativa o link da categoria pai.
         if (targetLink.matches("aside nav ul ul a")) {
-          const parentLi = targetLink.closest("ul").closest("li"); // Encontra o <li> pai da categoria
+          const parentLi = targetLink.closest("ul").closest("li");
           if (parentLi) {
-            const parentCategoryLink = parentLi.querySelector("a.nav-link"); // Encontra o link principal da categoria
+            const parentCategoryLink = parentLi.querySelector("a.nav-link");
             if (parentCategoryLink) {
               parentCategoryLink.classList.add("active");
             }
@@ -51,29 +40,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Função para determinar qual link deve estar ativo com base nos elementos visíveis
   const updateActiveLink = () => {
     if (visibleElements.size === 0) {
-      activateLinkForId(null); // Nenhum elemento observado está visível, então limpa todos os destaques.
+      activateLinkForId(null);
       return;
     }
 
     let topMostVisibleId = null;
-    let minTopValue = Infinity; // Usado para encontrar o elemento mais ao topo
-    let maxIntersectionRatio = 0; // Usado como critério secundário
+    let minTopValue = Infinity;
+    let maxIntersectionRatio = 0;
 
     visibleElements.forEach((entry, id) => {
       const rect = entry.target.getBoundingClientRect();
-
-      // Considera apenas elementos que estão efetivamente na viewport
       if (rect.top < window.innerHeight && rect.bottom > 0) {
         if (topMostVisibleId === null || rect.top < minTopValue) {
-          // Este elemento está mais acima do que o candidato atual
           minTopValue = rect.top;
           topMostVisibleId = id;
           maxIntersectionRatio = entry.intersectionRatio;
         } else if (rect.top === minTopValue) {
-          // Elementos no mesmo nível de topo: prefere o que tem maior área visível
           if (entry.intersectionRatio > maxIntersectionRatio) {
             topMostVisibleId = id;
             maxIntersectionRatio = entry.intersectionRatio;
@@ -84,33 +68,26 @@ document.addEventListener("DOMContentLoaded", () => {
     activateLinkForId(topMostVisibleId);
   };
 
-  // Cria e configura o IntersectionObserver
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        // Adiciona o elemento ao Map se ele estiver visível
         visibleElements.set(entry.target.id, entry);
       } else {
-        // Remove o elemento do Map se ele não estiver mais visível
         visibleElements.delete(entry.target.id);
       }
     });
-    // Após processar todas as mudanças, atualiza qual link deve estar ativo
     updateActiveLink();
   }, observerOptions);
 
-  // Começa a observar cada alvo de navegação
   allNavTargets.forEach((target) => {
     if (target.id) {
-      // Garante que o elemento tem um ID para ser observado
       observer.observe(target);
     }
   });
 
-  // Lógica de clique para rolagem suave para todos os links que começam com '#'
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
-      e.preventDefault(); // Previne o comportamento padrão de navegação por âncora
+      e.preventDefault();
       const targetId = this.getAttribute("href");
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
@@ -118,4 +95,114 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // ==========================================
+  // 2. LÓGICA DO MOTOR DE BUSCA (COM TRAVA)
+  // ==========================================
+  const searchInput = document.getElementById('searchInput');
+  const articles = document.querySelectorAll('main article');
+  const sections = document.querySelectorAll('main section');
+  const noResultsMsg = document.getElementById('noResultsMsg');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function (e) {
+      const term = e.target.value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      let hasGlobalResults = false;
+
+      const homeSection = document.getElementById('home');
+      if (term !== '') {
+        if (homeSection) homeSection.style.display = 'none';
+      } else {
+        if (homeSection) homeSection.style.display = 'block';
+      }
+
+      articles.forEach(article => {
+        const text = article.innerText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        if (text.includes(term)) {
+          article.style.display = 'block';
+          hasGlobalResults = true;
+        } else {
+          article.style.display = 'none';
+        }
+      });
+
+      // Timeout para evitar o bug do título fantasma
+      setTimeout(() => {
+        sections.forEach(section => {
+          if (section.id === 'home' || section.id === 'faq') return; 
+
+          const sectionArticles = section.querySelectorAll('article');
+          
+          if (sectionArticles.length > 0) {
+            const hasVisibleArticle = Array.from(sectionArticles).some(article => article.style.display !== 'none');
+
+            if (term !== '' && !hasVisibleArticle) {
+              section.style.display = 'none'; 
+            } else {
+              section.style.display = 'block'; 
+            }
+          } else {
+            const text = section.innerText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            if (text.includes(term) || term === '') {
+              section.style.display = 'block';
+              if (term !== '') hasGlobalResults = true;
+            } else {
+              section.style.display = 'none';
+            }
+          }
+        });
+
+        if (!hasGlobalResults && term !== '') {
+          noResultsMsg.classList.remove('hidden');
+        } else {
+          noResultsMsg.classList.add('hidden');
+        }
+      }, 0);
+    });
+  }
+
+  // ==========================================
+  // 3. MENU MOBILE TOGGLE
+  // ==========================================
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const sidebarMenu = document.getElementById('sidebarMenu');
+  const topNav = document.getElementById('topNav');
+
+  if (mobileMenuBtn) {
+    mobileMenuBtn.addEventListener('click', () => {
+      sidebarMenu.classList.toggle('hidden');
+      topNav.classList.toggle('hidden');
+    });
+  }
+
+  asideNavLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth < 768) { 
+        sidebarMenu.classList.add('hidden');
+      }
+    });
+  });
+
+  // ==========================================
+  // 4. LÓGICA DO DARK MODE
+  // ==========================================
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-theme');
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-theme');
+
+      if (body.classList.contains('dark-theme')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+  }
+
 });
