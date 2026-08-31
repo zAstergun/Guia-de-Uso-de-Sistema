@@ -5,52 +5,77 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Guia de Uso do Sistema</title>
+  <meta name="description" content="Guia interno de procedimentos de sistema e rotinas operacionais." />
+  <meta name="theme-color" content="#002776" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="images/logo.svg">
-</head>
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml" />
+  <script>
+    (() => {
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem("guia-theme") || localStorage.getItem("theme");
+      } catch (_error) {
+        savedTheme = null;
+      }
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = ["light", "dark"].includes(savedTheme) ? savedTheme : (prefersDark ? "dark" : "light");
+    })();
+  </script>
 </head>
 
 <body class="flex flex-col min-h-screen">
-  <header class="bg-[#002776] text-white p-6 shadow-lg rounded-b-lg">
-    <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
-      <div class="flex justify-between items-center w-full md:w-auto">
-        <div>
-          <h1 class="text-4xl font-extrabold">
-            Guia de Uso do Sistema
-          </h1>
-          <p class="text-xl opacity-80 mt-1">Ultrafarma</p>
-        </div>
-        <div class="flex items-center space-x-4">
-          <button id="themeToggle" class="text-white focus:outline-none p-2 rounded hover:bg-white/10"
-            title="Alternar Tema">
-            <svg id="themeIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-            </svg>
-          </button>
-          <button id="mobileMenuBtn" class="md:hidden text-white focus:outline-none p-2 rounded hover:bg-white/10">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-        </div>
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+  <header class="site-header bg-[#002776] text-white">
+    <div class="site-header-inner container mx-auto">
+      <div class="brand-row flex justify-between items-center w-full md:w-auto">
+        <a class="brand-lockup" href="#home" aria-label="Guia de Uso do Sistema — início">
+          <span class="brand-mark"><img src="images/logo.svg" alt="Símbolo da Ultrafarma" loading="lazy" decoding="async" /></span>
+          <span class="brand-copy">
+            <span class="brand-eyebrow">Central de procedimentos</span>
+            <h1>Guia de Uso do Sistema</h1>
+            <span class="brand-name">Ultrafarma</span>
+          </span>
+        </a>
       </div>
-      <nav class="hidden md:flex w-full md:w-auto mt-4 md:mt-0" id="topNav">
-        <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-6 text-lg">
+      <nav class="top-nav hidden md:flex w-full md:w-auto" id="topNav" aria-label="Navegação principal">
+        <ul class="flex flex-col md:flex-row">
           <li><a href="#home" class="hover:text-[#FFD200] transition duration-300">Início</a></li>
           <li><a href="#procedimentos-sistema" class="hover:text-[#FFD200] transition duration-300">Sistema</a></li>
           <li><a href="#rotinas-operacionais" class="hover:text-[#FFD200] transition duration-300">Rotinas</a></li>
-          <li><a href="#contato" class="hover:text-[#FFD200] transition duration-300">Contato</a></li>
+          <li><a href="#documentos-importantes" class="hover:text-[#FFD200] transition duration-300">Documentos</a></li>
+          <li><a href="#faq" class="hover:text-[#FFD200] transition duration-300">FAQ</a></li>
         </ul>
       </nav>
+      <div class="header-actions flex items-center space-x-2">
+        <button id="themeToggle" class="icon-button text-white p-2 rounded hover:bg-white/10"
+          type="button" aria-label="Ativar modo escuro" aria-pressed="false" title="Ativar modo escuro">
+          <svg id="themeIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+          <span id="themeLabel" class="sr-only">Ativar modo escuro</span>
+        </button>
+        <button id="mobileMenuBtn" class="icon-button md:hidden text-white p-2 rounded hover:bg-white/10"
+          type="button" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="sidebarMenu">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
-  <div class="flex flex-1 container mx-auto mt-8 p-4 md:p-6 bg-white shadow-xl rounded-lg">
+  <div id="menuOverlay" class="menu-overlay hidden md:hidden" aria-hidden="true"></div>
+
+  <div class="guide-shell flex flex-1 container mx-auto">
     <aside id="sidebarMenu"
-      class="w-full md:w-1/4 lg:w-1/5 pr-4 md:pr-8 border-r border-gray-200 hidden md:block mb-6 md:mb-0">
+      class="sidebar mobile-drawer w-full md:w-1/4 lg:w-1/5 hidden md:block"
+      aria-label="Navegação por seções" tabindex="-1">
+      <div class="drawer-heading md:hidden">
+        <strong>Seções do Guia</strong>
+        <button id="mobileMenuClose" class="icon-button" type="button" aria-label="Fechar menu">×</button>
+      </div>
       <nav class="sticky top-8 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 pb-4">
         <h2 class="text-2xl font-semibold text-gray-800 mb-6">Navegação</h2>
         <ul class="space-y-3">
@@ -136,20 +161,15 @@
               <span class="font-medium">Perguntas Frequentes</span>
             </a>
           </li>
-          <li>
-            <a href="#contato"
-              class="nav-link block p-3 rounded-md text-gray-700 hover:bg-[#fff9db] hover:text-[#002776] transition duration-200">
-              <span class="font-medium">Contato e Suporte</span>
-            </a>
-          </li>
         </ul>
       </nav>
     </aside>
 
-    <main class="w-full md:w-3/4 lg:w-4/5 pl-4 md:pl-8">
-      <div class="mt-8 mb-8">
-        <label for="searchInput" class="mb-2 text-sm font-medium text-gray-900 sr-only">Buscar</label>
-        <div class="relative">
+    <main id="conteudo-principal" tabindex="-1" class="guide-main w-full md:w-3/4 lg:w-4/5">
+      <section class="search-panel mt-4 md:mt-8 mb-8" aria-labelledby="searchTitle">
+        <h2 id="searchTitle" class="text-xl font-semibold text-gray-900 mb-2">O que você precisa encontrar?</h2>
+        <label for="searchInput" class="mb-2 text-sm text-gray-700 block">Busque em procedimentos, rotinas, documentos e perguntas frequentes</label>
+        <div class="search-control relative">
           <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="w-5 h-5 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
               viewBox="0 0 20 20">
@@ -158,15 +178,18 @@
             </svg>
           </div>
           <input type="search" id="searchInput"
-            class="block w-full p-4 pl-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-[#002776] focus:border-[#002776]"
-            placeholder="Busque por 'fechamento', 'ifood', 'recebimento'..." required>
+            class="block w-full p-4 pl-10 pr-24 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+            placeholder="Ex.: fechamento, convênios, recebimento" autocomplete="off" aria-describedby="searchStatus">
+          <button id="clearSearch" class="clear-search" type="button" hidden>Limpar</button>
         </div>
-        <p id="noResultsMsg" class="hidden text-red-500 mt-2 font-medium">Nenhum procedimento encontrado para essa
-          busca.</p>
-      </div>
-      <section id="home" class="mb-12">
+        <p id="searchStatus" class="search-status mt-3" role="status" aria-live="polite"></p>
+        <div id="searchResults" class="search-results" aria-label="Resultados da busca" hidden></div>
+      </section>
+      <div id="guideContent">
+      <section id="home" class="home-hero mb-12">
+        <p class="hero-kicker">Manual operacional · consulta rápida</p>
         <h2 class="text-3xl font-bold text-gray-900 mb-4">
-          Bem-vindo ao Guia de Uso do Sistema!
+          Tudo o que você precisa para conduzir a rotina com segurança.
         </h2>
         <p class="text-gray-700 leading-relaxed mb-4">
           Este é o seu guia centralizado para todos os procedimentos, rotinas
@@ -177,9 +200,17 @@
         <p class="text-gray-700 leading-relaxed">
           Utilize o menu de navegação à esquerda (ou na parte superior em
           dispositivos móveis) para explorar as diferentes seções. Em caso de
-          dúvidas ou sugestões de melhoria para o Guia, por favor, entre em contato comigo na seção de Contato e
-          Suporte.
+          dúvidas ou sugestões de melhoria, utilize o canal de feedback quando ele estiver disponível.
         </p>
+        <div class="validation-notice mt-6" role="note">
+          <strong>Validação institucional pendente.</strong>
+          O conteúdo operacional desta revisão preserva a versão anterior e deve ser homologado pela organização antes de ser adotado como orientação definitiva.
+        </div>
+        <nav class="hero-actions" aria-label="Atalhos do guia">
+          <a class="hero-link hero-link-primary" href="#procedimentos-sistema">Ver procedimentos <span aria-hidden="true">→</span></a>
+          <a class="hero-link" href="#rotinas-operacionais">Consultar rotinas <span aria-hidden="true">→</span></a>
+          <a class="hero-link" href="#faq">Tirar uma dúvida <span aria-hidden="true">→</span></a>
+        </nav>
       </section>
 
       <section id="procedimentos-sistema" class="mb-12 pt-10">
@@ -215,7 +246,7 @@
             <li>Inserir o troco/fundo de caixa como <span class="font-bold">0</span>.</li>
           </ol>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Fluxograma Abertura Caixa.svg" alt="Fluxograma de Login no Sistema"
+            <img src="images/Fluxograma Abertura Caixa.svg" alt="Fluxograma de login no sistema, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
           <p class="text-gray-700 leading-relaxed italic text-sm">
@@ -238,7 +269,7 @@
             <li>Em caso de erro no registro, chamar imediatamente o farmacêutico/gerente para estorno.</li>
           </ul>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Vendas e Frente de Caixa.svg" alt="Fluxograma de Vendas e Frente de Caixa"
+            <img src="images/Vendas e Frente de Caixa.svg" alt="Fluxograma de vendas e frente de caixa, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
           <div class="mt-4 p-4 bg-blue-50 border-l-4 border-[#002776] rounded-r-lg">
@@ -266,7 +297,7 @@
             Dúvidas sobre regras específicas de algum laboratório? Consulte a pasta física no balcão principal.
           </p>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Convênios e PBM.svg" alt="Fluxograma de Convênios e PBM"
+            <img src="images/Convênios e PBM.svg" alt="Fluxograma de convênios e PBM, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -279,21 +310,22 @@
             Procedimento para realizar o fechamento das entregas, criação de romaneio, devolução de entrega e afins.
           </p>
           <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
-            <li><b>CTRL + F3</b> para criar o romaneio das entregas.</li>
-            <p>Após aparecer o <b>MENU</b> você deve informar o número da venda que será criado o romaneio, se não
-              souber qual é, ele é mostrado no <b>CTRL + F5.</b></p>
-            <li><b>CTRL + F4</b> para selecionar qual o romaneio irá ser dado baixa.</li>
-            <p>O número do romaneio pode ser consultado no papel que foi impresso no primeiro passo e também através do
-              <b>CTRL + F5</b>.</p>
-            <li><b>Devolução</b></li>
-            <p>Caso a entrega não tenha sido feita, não há necessidade de colocar valor algum, apenas informar <b>D</b>
-              (devolução) para o produto voltar para a loja.</p>
-            <li><b>Procedimentos Específicos</b></li>
-            <p><b>IFOOD</b> e <b>FARMÁCIAS APP</b></p>
-            <p>Requerem procedimentos específicos, então foram criados tópicos somente para eles.</p>
+            <li><b>CTRL + F3</b> para criar o romaneio das entregas.
+              <p>Após aparecer o <b>MENU</b> você deve informar o número da venda que será criado o romaneio, se não souber qual é, ele é mostrado no <b>CTRL + F5.</b></p>
+            </li>
+            <li><b>CTRL + F4</b> para selecionar qual o romaneio irá ser dado baixa.
+              <p>O número do romaneio pode ser consultado no papel que foi impresso no primeiro passo e também através do <b>CTRL + F5</b>.</p>
+            </li>
+            <li><b>Devolução</b>
+              <p>Caso a entrega não tenha sido feita, não há necessidade de colocar valor algum, apenas informar <b>D</b> (devolução) para o produto voltar para a loja.</p>
+            </li>
+            <li><b>Procedimentos Específicos</b>
+              <p><b>IFOOD</b> e <b>FARMÁCIAS APP</b></p>
+              <p>Requerem procedimentos específicos, então foram criados tópicos somente para eles.</p>
+            </li>
           </ol>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Finalizar Entrega.svg" alt="Fluxograma de finalização de entrega"
+            <img src="images/Finalizar Entrega.svg" alt="Fluxograma de finalização de entrega, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
           <p class="text-gray-700 leading-relaxed italic text-sm">
@@ -322,7 +354,7 @@
             <li>O comprovante do pedido assinado pelo motoboy deve ser guardado junto ao fechamento do caixa.</li>
           </ul>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Ifood.svg" alt="Fluxograma de funcionamneto do IFOOD"
+            <img src="images/Ifood.svg" alt="Fluxograma do procedimento para pedidos do iFood, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -346,7 +378,7 @@
             <li>O comprovante do pedido assinado pelo motoboy deve ser guardado junto ao fechamento do caixa.</li>
           </ol>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Farmacias APP.svg" alt="Fluxograma de funcionamneto do Farmáscias APP"
+            <img src="images/Farmacias APP.svg" alt="Fluxograma do procedimento para pedidos do Farmácias APP, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -370,7 +402,7 @@
             erros.
           </p>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Fechamento Caixa.svg" alt="Fluxograma do Fechamento do Caixa"
+            <img src="images/Fechamento Caixa.svg" alt="Fluxograma de fechamento do caixa, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -410,7 +442,7 @@
             </li>
           </ul>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Recebimento e Conferencias.svg" alt="Área de Recebimento de Mercadorias"
+            <img src="images/Recebimento e Conferencias.svg" alt="Fluxograma de recebimento e conferência de mercadorias, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -438,7 +470,7 @@
             </li>
           </ul>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Organização e Limpeza da Loja.svg" alt="Fluxograma de Rotina de Organização Diária"
+            <img src="images/Organização e Limpeza da Loja.svg" alt="Fluxograma da rotina de organização e limpeza da loja, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -468,7 +500,7 @@
             Lembre-se: um bom atendimento fideliza o cliente.
           </p>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
-            <img src="images/Atendimento ao Cliente.svg" alt="Fluxograma de Atendimento ao Cliente"
+            <img src="images/Atendimento ao Cliente.svg" alt="Fluxograma de atendimento ao cliente, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -498,7 +530,7 @@
           </p>
           <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
             <img src="images/Descarte de Residuos e Medicamentos Vencidos.svg"
-              alt="Fluxograma de Descarte de Resíduos e Medicamentos Vencidos."
+              alt="Fluxograma de descarte de resíduos e medicamentos vencidos, correspondente às etapas descritas acima" loading="lazy" decoding="async"
               class="w-full h-auto rounded-md object-cover" />
           </div>
         </article>
@@ -512,22 +544,12 @@
           Aqui você encontrará links e informações sobre documentos
           essenciais, como manuais, políticas internas e legislação relevante.
         </p>
-        <ul class="list-disc list-inside text-gray-700 space-y-3">
-          <li>
-            <a href="#" class="text-[#002776] hover:underline">Manual de Boas Práticas de Farmácia (PDF)</a>
-          </li>
-          <li>
-            <a href="#" class="text-[#002776] hover:underline">Política de Trocas e Devoluções</a>
-          </li>
-          <li>
-            <a href="#" class="text-[#002776] hover:underline">Regulamento Interno da Farmácia</a>
-          </li>
-          <li>
-            <a href="#" class="text-[#002776] hover:underline">Legislação sobre Medicamentos Controlados (ANVISA)</a>
-          </li>
-          <li>
-            <a href="#" class="text-[#002776] hover:underline">Plano de Contingência e Emergência</a>
-          </li>
+        <ul class="document-list text-gray-700 space-y-3">
+          <li><span>Manual de Boas Práticas de Farmácia (PDF)</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Política de Trocas e Devoluções</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Regulamento Interno da Farmácia</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Legislação sobre Medicamentos Controlados (ANVISA)</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Plano de Contingência e Emergência</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
         </ul>
         <div class="mt-8 p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg shadow-sm">
           <h3 class="text-xl font-semibold text-yellow-800 mb-3">Atenção:</h3>
@@ -573,74 +595,37 @@
         </div>
       </section>
 
-      <section id="contato" class="mb-12 pt-10">
+      <section id="contato" class="mb-12 pt-10" aria-labelledby="contactTitle" hidden>
         <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
-          5. Contato e Suporte
+          <span id="contactTitle">5. Contato e Suporte</span>
         </h2>
         <p class="text-gray-700 mb-6 leading-relaxed">
-          Precisa de ajuda? Entre em contato com as equipes responsáveis.
+          Canais autorizados pela organização.
         </p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="bg-[#fff9db] p-6 rounded-lg shadow-sm">
-            <h3 class="text-xl font-semibold text-[#002776] mb-3">
-              Suporte de TI / Sistema
-            </h3>
-            <p class="text-[#002776] mb-2">
-              <span class="font-medium">Telefone:</span> (XX) XXXX-XXXX
-            </p>
-            <p class="text-[#002776] mb-2">
-              <span class="font-medium">Email:</span>
-              suporte.ti@[nomedafarmacia].com.br
-            </p>
-            <p class="text-[#002776]">
-              <span class="font-medium">Horário:</span> Segunda a Sexta, 8h às
-              18h
-            </p>
-          </div>
-          <div class="bg-green-50 p-6 rounded-lg shadow-sm">
-            <h3 class="text-xl font-semibold text-green-800 mb-3">
-              Gestão / Recursos Humanos
-            </h3>
-            <p class="text-green-700 mb-2">
-              <span class="font-medium">Telefone:</span> (XX) YYYY-YYYY
-            </p>
-            <p class="text-green-700 mb-2">
-              <span class="font-medium">Email:</span>
-              rh@[nomedafarmacia].com.br
-            </p>
-            <p class="text-green-700">
-              <span class="font-medium">Horário:</span> Segunda a Sexta, 9h às
-              17h
-            </p>
-          </div>
-          <div class="bg-[#e0f2fe] p-6 rounded-lg shadow-sm">
-            <h3 class="text-xl font-semibold text-[#002776] mb-3">
-              Gostaria de acrescentar algo nesse manual?
-            </h3>
-            <p class="text-[#002776] mb-2">
-              <span class="font-medium">Telefone:</span> (11) 94141-2825
-            </p>
-            <p class="text-[#002776] mb-2">
-              <span class="font-medium">Email:</span> douglasluizsantos@proton.me
-            </p>
-            <p class="text-[#002776]">
-              <span class="font-medium">Horário:</span> Qualquer horário
-            </p>
-          </div>
-        </div>
+        <div id="contactCards" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
       </section>
+
+      <section id="feedback" class="feedback-section mb-12" aria-labelledby="feedbackTitle" hidden>
+        <div>
+          <p class="eyebrow">Participação voluntária</p>
+          <h2 id="feedbackTitle" class="text-2xl font-bold text-gray-900">Avalie este Guia</h2>
+          <p class="text-gray-700 mt-2">O formulário externo não coleta respostas nesta aplicação. Consulte as condições do formulário antes de enviar.</p>
+        </div>
+        <a id="feedbackLink" class="primary-action" target="_blank" rel="noopener noreferrer">Abrir formulário de avaliação</a>
+      </section>
+
+      </div>
     </main>
   </div>
 
-  <footer class="bg-gray-800 text-white p-6 mt-8 rounded-t-lg shadow-inner">
+  <footer class="site-footer bg-gray-800 text-white">
     <div class="container mx-auto text-center text-sm">
-      <p>
-        &copy; Criado por <a href="https://instagram.com/luiz_001211" target="_blank">Aster</a>. Todos os direitos
-        reservados.
-      </p>
-      <p class="mt-2">Desenvolvido para uso interno.</p>
+      <p>Guia de Uso do Sistema <span id="footerVersion"></span> · preparado para validação operacional.</p>
+      <p class="mt-2">Sem rastreamento ou coleta local de respostas.</p>
     </div>
   </footer>
+  <script src="js/config.js"></script>
+  <script src="js/search.js"></script>
   <script src="js/script.js"></script>
 </body>
 
