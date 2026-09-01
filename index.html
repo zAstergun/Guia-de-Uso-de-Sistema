@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guia de Uso do Sistema</title>
+  <meta name="description" content="Guia interno de procedimentos de sistema e rotinas operacionais." />
+  <meta name="theme-color" content="#002776" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml" />
+  <script>
+    (() => {
+      let savedTheme = null;
+      try {
+        savedTheme = localStorage.getItem("guia-theme") || localStorage.getItem("theme");
+      } catch (_error) {
+        savedTheme = null;
+      }
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = ["light", "dark"].includes(savedTheme) ? savedTheme : (prefersDark ? "dark" : "light");
+    })();
+  </script>
+</head>
+
+<body class="flex flex-col min-h-screen">
+  <a class="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
+  <header class="site-header bg-[#002776] text-white">
+    <div class="site-header-inner container mx-auto">
+      <div class="brand-row flex justify-between items-center w-full md:w-auto">
+        <a class="brand-lockup" href="#home" aria-label="Guia de Uso do Sistema — início">
+          <span class="brand-mark"><img src="images/logo.svg" alt="Símbolo da Ultrafarma" loading="lazy" decoding="async" /></span>
+          <span class="brand-copy">
+            <span class="brand-eyebrow">Central de procedimentos</span>
+            <h1>Guia de Uso do Sistema</h1>
+            <span class="brand-name">Ultrafarma</span>
+          </span>
+        </a>
+      </div>
+      <nav class="top-nav hidden md:flex w-full md:w-auto" id="topNav" aria-label="Navegação principal">
+        <ul class="flex flex-col md:flex-row">
+          <li><a href="#home" class="hover:text-[#FFD200] transition duration-300">Início</a></li>
+          <li><a href="#procedimentos-sistema" class="hover:text-[#FFD200] transition duration-300">Sistema</a></li>
+          <li><a href="#rotinas-operacionais" class="hover:text-[#FFD200] transition duration-300">Rotinas</a></li>
+          <li><a href="#documentos-importantes" class="hover:text-[#FFD200] transition duration-300">Documentos</a></li>
+          <li><a href="#faq" class="hover:text-[#FFD200] transition duration-300">FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="header-actions flex items-center space-x-2">
+        <button id="themeToggle" class="icon-button text-white p-2 rounded hover:bg-white/10"
+          type="button" aria-label="Ativar modo escuro" aria-pressed="false" title="Ativar modo escuro">
+          <svg id="themeIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+          <span id="themeLabel" class="sr-only">Ativar modo escuro</span>
+        </button>
+        <button id="mobileMenuBtn" class="icon-button md:hidden text-white p-2 rounded hover:bg-white/10"
+          type="button" aria-label="Abrir menu de navegação" aria-expanded="false" aria-controls="sidebarMenu">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="menuOverlay" class="menu-overlay hidden md:hidden" aria-hidden="true"></div>
+
+  <div class="guide-shell flex flex-1 container mx-auto">
+    <aside id="sidebarMenu"
+      class="sidebar mobile-drawer w-full md:w-1/4 lg:w-1/5 hidden md:block"
+      aria-label="Navegação por seções" tabindex="-1">
+      <div class="drawer-heading md:hidden">
+        <strong>Seções do Guia</strong>
+        <button id="mobileMenuClose" class="icon-button" type="button" aria-label="Fechar menu">×</button>
+      </div>
+      <nav class="sticky top-8 max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar pr-2 pb-4">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">Navegação</h2>
+        <ul class="space-y-3">
+          <li>
+            <a href="#procedimentos-sistema"
+              class="nav-link block p-3 rounded-md text-gray-700 hover:bg-[#fff9db] hover:text-[#002776] transition duration-200">
+              <span class="font-medium">Procedimentos de Sistema</span>
+            </a>
+            <ul class="ml-4 mt-2 space-y-2 text-sm text-gray-600">
+              <li>
+                <a href="#abertura-sistema"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Abertura
+                  do Sistema [CAIXA]</a>
+              </li>
+              <li>
+                <a href="#vendas-caixa"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Vendas e
+                  Frente de Caixa</a>
+              </li>
+              <li>
+                <a href="#convenios-pbm"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Convênios
+                  e PBM</a>
+              </li>
+              <li>
+                <a href="#finalizar-entregas"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Finalizar
+                  entregas [CAIXA]</a>
+              </li>
+              <li>
+                <a href="#ifood"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">IFOOD</a>
+              </li>
+              <li>
+                <a href="#farmacias-app"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Farmácias
+                  APP</a>
+              </li>
+              <li>
+                <a href="#fechamento-caixa"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Fechamento
+                  [CAIXA]</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#rotinas-operacionais"
+              class="nav-link block p-3 rounded-md text-gray-700 hover:bg-[#fff9db] hover:text-[#002776] transition duration-200">
+              <span class="font-medium">Rotinas Operacionais</span>
+            </a>
+            <ul class="ml-4 mt-2 space-y-2 text-sm text-gray-600">
+              <li>
+                <a href="#recebimento-mercadorias"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Recebimento
+                  de Mercadorias</a>
+              </li>
+              <li>
+                <a href="#organizacao-loja"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Organização
+                  da Loja</a>
+              </li>
+              <li>
+                <a href="#atendimento-cliente"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Atendimento
+                  ao Cliente</a>
+              </li>
+              <li>
+                <a href="#descarte-residuos"
+                  class="block p-2 rounded-md hover:bg-[#fff9db] hover:text-gray-800 transition duration-200">Descarte
+                  de Resíduos</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#documentos-importantes"
+              class="nav-link block p-3 rounded-md text-gray-700 hover:bg-[#fff9db] hover:text-[#002776] transition duration-200">
+              <span class="font-medium">Documentos Importantes</span>
+            </a>
+          </li>
+          <li>
+            <a href="#faq"
+              class="nav-link block p-3 rounded-md text-gray-700 hover:bg-[#fff9db] hover:text-[#002776] transition duration-200">
+              <span class="font-medium">Perguntas Frequentes</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="conteudo-principal" tabindex="-1" class="guide-main w-full md:w-3/4 lg:w-4/5">
+      <section class="search-panel mt-4 md:mt-8 mb-8" aria-labelledby="searchTitle">
+        <h2 id="searchTitle" class="text-xl font-semibold text-gray-900 mb-2">O que você precisa encontrar?</h2>
+        <label for="searchInput" class="mb-2 text-sm text-gray-700 block">Busque em procedimentos, rotinas, documentos e perguntas frequentes</label>
+        <div class="search-control relative">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+            <svg class="w-5 h-5 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 20 20">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+          </div>
+          <input type="search" id="searchInput"
+            class="block w-full p-4 pl-10 pr-24 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+            placeholder="Ex.: fechamento, convênios, recebimento" autocomplete="off" aria-describedby="searchStatus">
+          <button id="clearSearch" class="clear-search" type="button" hidden>Limpar</button>
+        </div>
+        <p id="searchStatus" class="search-status mt-3" role="status" aria-live="polite"></p>
+        <div id="searchResults" class="search-results" aria-label="Resultados da busca" hidden></div>
+      </section>
+      <div id="guideContent">
+      <section id="home" class="home-hero mb-12">
+        <p class="hero-kicker">Manual operacional · consulta rápida</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          Tudo o que você precisa para conduzir a rotina com segurança.
+        </h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+          Este é o seu guia centralizado para todos os procedimentos, rotinas
+          e informações essenciais da nossa farmácia. O meu objetivo é
+          garantir que todos tenham acesso rápido e fácil às informações
+          necessárias para desempenhar suas funções com excelência.
+        </p>
+        <p class="text-gray-700 leading-relaxed">
+          Utilize o menu de navegação à esquerda (ou na parte superior em
+          dispositivos móveis) para explorar as diferentes seções. Em caso de
+          dúvidas ou sugestões de melhoria, utilize o canal de feedback quando ele estiver disponível.
+        </p>
+        <div class="validation-notice mt-6" role="note">
+          <strong>Validação institucional pendente.</strong>
+          O conteúdo operacional desta revisão preserva a versão anterior e deve ser homologado pela organização antes de ser adotado como orientação definitiva.
+        </div>
+        <nav class="hero-actions" aria-label="Atalhos do guia">
+          <a class="hero-link hero-link-primary" href="#procedimentos-sistema">Ver procedimentos <span aria-hidden="true">→</span></a>
+          <a class="hero-link" href="#rotinas-operacionais">Consultar rotinas <span aria-hidden="true">→</span></a>
+          <a class="hero-link" href="#faq">Tirar uma dúvida <span aria-hidden="true">→</span></a>
+        </nav>
+      </section>
+
+      <section id="procedimentos-sistema" class="mb-12 pt-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
+          1. Procedimentos de Sistema
+        </h2>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          Esta seção detalha os passos para a utilização dos sistemas internos
+          da farmácia, desde a abertura até o fechamento.
+        </p>
+
+        <article id="abertura-sistema" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.1. Abertura do Sistema e Login
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Guia passo a passo para iniciar o sistema operacional e de vendas
+            no início do turno.
+          </p>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li>
+              Ligar o computador e periféricos (impressora, leitor de código
+              de barras).
+            </li>
+            <li>Aguardar o carregamento completo do sistema operacional.</li>
+            <li>Clicar no ícone do sistema PDV na área de trabalho.</li>
+            <li>
+              Inserir seu <span class="font-bold">usuário</span> e
+              <span class="font-bold">senha</span> nos campos indicados.
+            </li>
+            <li>Aguardar o Supervisor inserir o <span class="font-bold">usuário</span> e <span
+                class="font-bold">senha</span>.</li>
+            <li>Inserir o troco/fundo de caixa como <span class="font-bold">0</span>.</li>
+          </ol>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Fluxograma Abertura Caixa.svg" alt="Fluxograma de login no sistema, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Em caso de problemas de login, contatar o suporte técnico
+            imediatamente.
+          </p>
+        </article>
+
+        <article id="vendas-caixa" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.2. Vendas e Frente de Caixa
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Procedimento padrão para registro de vendas, aplicação de descontos manuais e finalização de pagamentos.
+          </p>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>Bipar os produtos conferindo sempre a quantidade e dosagem na tela.</li>
+            <li>Perguntar se o cliente possui cadastro na loja ou convênio antes de totalizar.</li>
+            <li>Para pagamentos em dinheiro, sempre confirmar o troco antes de fechar a gaveta.</li>
+            <li>Em caso de erro no registro, chamar imediatamente o farmacêutico/gerente para estorno.</li>
+          </ul>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Vendas e Frente de Caixa.svg" alt="Fluxograma de vendas e frente de caixa, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+          <div class="mt-4 p-4 bg-blue-50 border-l-4 border-[#002776] rounded-r-lg">
+            <p class="text-sm text-[#002776] font-medium">Lembrete de Segurança: Nunca deixe o terminal do caixa
+              desbloqueado ao se afastar.</p>
+          </div>
+        </article>
+
+        <article id="convenios-pbm" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.3. Convênios e PBM (Programas de Desconto)
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Fluxo para autorização de descontos via laboratórios e planos de saúde corporativos.
+          </p>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li>Solicitar o CPF do cliente ou a carteirinha do convênio (física ou digital).</li>
+            <li>Pressionar a tecla de atalho de Convênios (ex: <b>F8</b> ou <b>CTRL+P</b>).</li>
+            <li>Selecionar o autorizador correto (Funcional, Vidalink, ePharma, etc.).</li>
+            <li>Aguardar a autorização online. Se o sistema retornar erro de comunicação, tentar novamente em 1 minuto.
+            </li>
+            <li>Imprimir o comprovante do PBM e anexar à via da loja.</li>
+          </ol>
+          <p class="text-gray-700 leading-relaxed italic text-sm mt-2">
+            Dúvidas sobre regras específicas de algum laboratório? Consulte a pasta física no balcão principal.
+          </p>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Convênios e PBM.svg" alt="Fluxograma de convênios e PBM, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="finalizar-entregas" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.4. Finalizar Entregas
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Procedimento para realizar o fechamento das entregas, criação de romaneio, devolução de entrega e afins.
+          </p>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li><b>CTRL + F3</b> para criar o romaneio das entregas.
+              <p>Após aparecer o <b>MENU</b> você deve informar o número da venda que será criado o romaneio, se não souber qual é, ele é mostrado no <b>CTRL + F5.</b></p>
+            </li>
+            <li><b>CTRL + F4</b> para selecionar qual o romaneio irá ser dado baixa.
+              <p>O número do romaneio pode ser consultado no papel que foi impresso no primeiro passo e também através do <b>CTRL + F5</b>.</p>
+            </li>
+            <li><b>Devolução</b>
+              <p>Caso a entrega não tenha sido feita, não há necessidade de colocar valor algum, apenas informar <b>D</b> (devolução) para o produto voltar para a loja.</p>
+            </li>
+            <li><b>Procedimentos Específicos</b>
+              <p><b>IFOOD</b> e <b>FARMÁCIAS APP</b></p>
+              <p>Requerem procedimentos específicos, então foram criados tópicos somente para eles.</p>
+            </li>
+          </ol>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Finalizar Entrega.svg" alt="Fluxograma de finalização de entrega, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Atenção à finalização das entregas e a autorização de cada uma.
+          </p>
+        </article>
+
+        <article id="ifood" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.5. IFOOD
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Instruções para como lidar com o sistema de pedidos do IFOOD.
+          </p>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Importante ressaltar que detalhes como "como separo o ifood no balcão" não serão mencionados, pois presumo
+            que isso já foi ensinado em loja".
+          </p><br>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>O pedido do Ifood <b>deve</b> ser impresso.</li>
+            <li>
+              Quando o motoboy for levar a entrega ele <b>deve</b> assinar o papel que foi impresso do pedido.
+            </li>
+            <li>Na finalização de entrega como Ifood é necessário informar o número do pedido do Ifood como autorização.
+            </li>
+            <li>O comprovante do pedido assinado pelo motoboy deve ser guardado junto ao fechamento do caixa.</li>
+          </ul>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Ifood.svg" alt="Fluxograma do procedimento para pedidos do iFood, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="farmacias-app" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.6. Farmácias APP
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Instruções para como lidar com o sistema de pedidos do Farmácias APP.
+          </p>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Importante ressaltar que detalhes como "como separo o Farmácias APP no balcão" não serão mencionados, pois
+            presumo que isso já foi ensinado em loja".
+          </p><br>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li>O pedido do Farmácias APP <b>deve</b> ser impresso.</li>
+            <li>Quando o motoboy for levar a entrega ele <b>deve</b> assinar o papel que foi impresso do pedido.</li>
+            <li>Na finalização de entrega como Farmácias APP é necessário informar a sequência de letras e números do
+              pedido do Farmácias APP como autorização.</li>
+            <li>O comprovante do pedido assinado pelo motoboy deve ser guardado junto ao fechamento do caixa.</li>
+          </ol>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Farmacias APP.svg" alt="Fluxograma do procedimento para pedidos do Farmácias APP, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="fechamento-caixa" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            1.7. Fechamento do Caixa
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Passos para o fechamento diário do caixa e conciliação de valores.
+          </p>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li>Contar o dinheiro físico no caixa.</li>
+            <li>Verificar os comprovantes de cartão, pix, ifood, convênios e farmácias app.</li>
+            <li>Fazer a sangria de todo o valor que não seja o fundo do caixa.</li>
+            <li>Registrar quaisquer divergências e reportar ao gerente.</li>
+            <li>Gerar o relatório de fechamento do caixa.</li>
+          </ol>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            O fechamento deve ser feito com atenção redobrada para evitar
+            erros.
+          </p>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Fechamento Caixa.svg" alt="Fluxograma de fechamento do caixa, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+      </section>
+
+      <section id="rotinas-operacionais" class="mb-12 pt-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
+          2. Rotinas Operacionais
+        </h2>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          Esta seção descreve as rotinas diárias e periódicas para a
+          manutenção da farmácia e o atendimento ao cliente.
+        </p>
+
+        <article id="recebimento-mercadorias" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            2.1. Recebimento e Conferência de Mercadorias
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Procedimento para receber, conferir e armazenar produtos dos
+            fornecedores.
+          </p>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>
+              Verificar a integridade das embalagens no momento da entrega.
+            </li>
+            <li>
+              Conferir a nota fiscal com os produtos recebidos (quantidade,
+              tipo, lote, validade).
+            </li>
+            <li>
+              Separar produtos que necessitam de refrigeração imediatamente.
+            </li>
+            <li>
+              Armazenar os produtos nos locais designados, seguindo as boas
+              práticas.
+            </li>
+          </ul>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Recebimento e Conferencias.svg" alt="Fluxograma de recebimento e conferência de mercadorias, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="organizacao-loja" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            2.2. Organização e Limpeza da Loja
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Diretrizes para manter a farmácia limpa, organizada e com produtos
+            bem expostos.
+          </p>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Importante lembrar que cada pessoa tem sua própria seção da loja para cuidar.
+          </p> <br>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>Limpeza diária de balcões, prateleiras e pisos.</li>
+            <li>
+              Organização dos produtos por categoria e ordem alfabética.
+            </li>
+            <li>Verificação e reposição de produtos nas gôndolas.</li>
+            <li>Descarte correto de embalagens e lixo.</li>
+            <li>
+              Manutenção da área de atendimento ao cliente sempre impecável.
+            </li>
+          </ul>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Organização e Limpeza da Loja.svg" alt="Fluxograma da rotina de organização e limpeza da loja, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="atendimento-cliente" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            2.3. Atendimento ao Cliente
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Boas práticas para um atendimento de excelência, com foco na
+            satisfação do cliente.
+          </p>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 mb-4">
+            <li>Receber o cliente com um sorriso e saudação.</li>
+            <li>Ouvir atentamente as necessidades do cliente.</li>
+            <li>
+              Oferecer informações claras e precisas sobre produtos e
+              serviços.
+            </li>
+            <li>Auxiliar na localização de produtos na loja.</li>
+            <li>
+              Resolver dúvidas e problemas de forma eficiente e cordial.
+            </li>
+            <li>Agradecer a preferência e convidar a retornar.</li>
+          </ul>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            Lembre-se: um bom atendimento fideliza o cliente.
+          </p>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Atendimento ao Cliente.svg" alt="Fluxograma de atendimento ao cliente, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+
+        <article id="descarte-residuos" class="bg-gray-50 p-6 rounded-lg shadow-sm mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4">
+            2.4. Descarte de Resíduos e Medicamentos Vencidos
+          </h3>
+          <p class="text-gray-700 leading-relaxed mb-4">
+            Orientações para o descarte correto de lixo comum, recicláveis e
+            medicamentos vencidos/não utilizados.
+          </p>
+          <ol class="list-decimal list-inside text-gray-700 space-y-2 mb-4">
+            <li>Separar o lixo comum do reciclável.</li>
+            <li>
+              Armazenar medicamentos vencidos em local seguro e separado.
+            </li>
+            <li>
+              Seguir o protocolo da Vigilância Sanitária para descarte de
+              medicamentos.
+            </li>
+            <li>Utilizar os coletores específicos para pilhas e baterias.</li>
+            <li>Manter a área de descarte limpa e organizada.</li>
+          </ol>
+          <p class="text-gray-700 leading-relaxed italic text-sm">
+            O descarte incorreto pode gerar multas e danos ambientais.
+          </p>
+          <div class="bg-white p-4 rounded-md border border-gray-200 mb-4">
+            <img src="images/Descarte de Residuos e Medicamentos Vencidos.svg"
+              alt="Fluxograma de descarte de resíduos e medicamentos vencidos, correspondente às etapas descritas acima" loading="lazy" decoding="async"
+              class="w-full h-auto rounded-md object-cover" />
+          </div>
+        </article>
+      </section>
+
+      <section id="documentos-importantes" class="mb-12 pt-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
+          3. Documentos Importantes
+        </h2>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          Aqui você encontrará links e informações sobre documentos
+          essenciais, como manuais, políticas internas e legislação relevante.
+        </p>
+        <ul class="document-list text-gray-700 space-y-3">
+          <li><span>Manual de Boas Práticas de Farmácia (PDF)</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Política de Trocas e Devoluções</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Regulamento Interno da Farmácia</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Legislação sobre Medicamentos Controlados (ANVISA)</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+          <li><span>Plano de Contingência e Emergência</span><small>Disponibilidade aguardando publicação autorizada.</small></li>
+        </ul>
+        <div class="mt-8 p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg shadow-sm">
+          <h3 class="text-xl font-semibold text-yellow-800 mb-3">Atenção:</h3>
+          <p class="text-yellow-700">
+            Certifique-se de sempre consultar a versão mais atualizada dos
+            documentos.
+          </p>
+        </div>
+      </section>
+
+      <section id="faq" class="mb-12 pt-10">
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
+          4. Perguntas Frequentes (FAQ)
+        </h2>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          Respostas rápidas para as dúvidas mais comuns do dia a dia. Clique na pergunta para ver a resposta.
+        </p>
+
+        <div class="space-y-4">
+          <details class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer group">
+            <summary class="font-semibold text-lg text-[#002776] list-none flex justify-between items-center">
+              O que fazer se a internet da loja cair?
+              <span class="transition group-open:rotate-180">▼</span>
+            </summary>
+            <p class="text-gray-700 mt-3 pl-2 border-l-2 border-[#FFD200]">
+              Mantenha a calma. Avise os clientes que o sistema está operando em modo de contingência. Não é possível
+              passar convênios (PBM) ou cartão sem conexão. Aceite apenas dinheiro ou Pix (se o cliente tiver 3G) e
+              anote os itens vendidos para dar baixa depois. Acione o suporte de TI imediatamente.
+            </p>
+          </details>
+
+          <details class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 cursor-pointer group">
+            <summary class="font-semibold text-lg text-[#002776] list-none flex justify-between items-center">
+              Cliente quer devolver um medicamento. É permitido?
+              <span class="transition group-open:rotate-180">▼</span>
+            </summary>
+            <p class="text-gray-700 mt-3 pl-2 border-l-2 border-[#FFD200]">
+              Por determinação da ANVISA, medicamentos (especialmente controlados e antibióticos) não podem ser trocados
+              ou devolvidos após a saída da loja, por questões de segurança sanitária. Apenas produtos de perfumaria
+              podem ser trocados (com cupom fiscal).
+            </p>
+          </details>
+        </div>
+      </section>
+
+      <section id="contato" class="mb-12 pt-10" aria-labelledby="contactTitle" hidden>
+        <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 pb-2 border-[#FFD200]">
+          <span id="contactTitle">5. Contato e Suporte</span>
+        </h2>
+        <p class="text-gray-700 mb-6 leading-relaxed">
+          Canais autorizados pela organização.
+        </p>
+        <div id="contactCards" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+      </section>
+
+      <section id="feedback" class="feedback-section mb-12" aria-labelledby="feedbackTitle" hidden>
+        <div>
+          <p class="eyebrow">Participação voluntária</p>
+          <h2 id="feedbackTitle" class="text-2xl font-bold text-gray-900">Avalie este Guia</h2>
+          <p class="text-gray-700 mt-2">O formulário externo não coleta respostas nesta aplicação. Consulte as condições do formulário antes de enviar.</p>
+        </div>
+        <a id="feedbackLink" class="primary-action" target="_blank" rel="noopener noreferrer">Abrir formulário de avaliação</a>
+      </section>
+
+      </div>
+    </main>
+  </div>
+
+  <footer class="site-footer bg-gray-800 text-white">
+    <div class="container mx-auto text-center text-sm">
+      <p>Guia de Uso do Sistema <span id="footerVersion"></span> · preparado para validação operacional.</p>
+      <p class="mt-2">Sem rastreamento ou coleta local de respostas.</p>
+    </div>
+  </footer>
+  <script src="js/config.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
